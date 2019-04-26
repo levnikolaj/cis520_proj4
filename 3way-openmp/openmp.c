@@ -9,6 +9,10 @@
 
 //****************************************************************
 
+/* Dynamically allocated array for storing substrings.
+ */
+char **longestSubstring;
+
 /* Stucture used to calculate virtual and physical memory.
  */
 typedef struct
@@ -74,7 +78,7 @@ int main(int argc, char *arg[])
 	#pragma omp parallel
 	{
 		/* void *functionName(omp_get_thread_num(), numOfThreads);
-		 * 
+		 *
 		 */
 	}
 
