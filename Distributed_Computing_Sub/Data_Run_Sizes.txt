@@ -1,0 +1,81 @@
+Nodes:1, Ntasks-per-node:1, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:1, Ntasks-per-node:1, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:1, Ntasks-per-node:1, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:1, Ntasks-per-node:1, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:1, Ntasks-per-node:2, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:1, Ntasks-per-node:2, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:1, Ntasks-per-node:2, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:1, Ntasks-per-node:2, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:1, Ntasks-per-node:4, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:1, Ntasks-per-node:4, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:1, Ntasks-per-node:4, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:1, Ntasks-per-node:4, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:1, Ntasks-per-node:8, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:1, Ntasks-per-node:8, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:1, Ntasks-per-node:8, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:1, Ntasks-per-node:8, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:2, Ntasks-per-node:1, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:2, Ntasks-per-node:1, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:2, Ntasks-per-node:1, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:2, Ntasks-per-node:1, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:2, Ntasks-per-node:2, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:2, Ntasks-per-node:2, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:2, Ntasks-per-node:2, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:2, Ntasks-per-node:2, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:2, Ntasks-per-node:4, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:2, Ntasks-per-node:4, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:2, Ntasks-per-node:4, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:2, Ntasks-per-node:4, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:2, Ntasks-per-node:8, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:2, Ntasks-per-node:8, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:2, Ntasks-per-node:8, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:2, Ntasks-per-node:8, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:4, Ntasks-per-node:1, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:4, Ntasks-per-node:1, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:4, Ntasks-per-node:1, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:4, Ntasks-per-node:1, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:4, Ntasks-per-node:2, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:4, Ntasks-per-node:2, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:4, Ntasks-per-node:2, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:4, Ntasks-per-node:2, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:4, Ntasks-per-node:4, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:4, Ntasks-per-node:4, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:4, Ntasks-per-node:4, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:4, Ntasks-per-node:4, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:4, Ntasks-per-node:8, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:4, Ntasks-per-node:8, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:4, Ntasks-per-node:8, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:4, Ntasks-per-node:8, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:8, Ntasks-per-node:1, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:8, Ntasks-per-node:1, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:8, Ntasks-per-node:1, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:8, Ntasks-per-node:1, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:8, Ntasks-per-node:2, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:8, Ntasks-per-node:2, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:8, Ntasks-per-node:2, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:8, Ntasks-per-node:2, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:8, Ntasks-per-node:4, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:8, Ntasks-per-node:4, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:8, Ntasks-per-node:4, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:8, Ntasks-per-node:4, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+Nodes:8, Ntasks-per-node:8, MaxLines: 1000, LINES_PER_CHUNK: 100
+Nodes:8, Ntasks-per-node:8, MaxLines: 10000, LINES_PER_CHUNK: 250
+Nodes:8, Ntasks-per-node:8, MaxLines: 100000, LINES_PER_CHUNK: 500
+Nodes:8, Ntasks-per-node:8, MaxLines: 1000000, LINES_PER_CHUNK: 500
+
+slurm-1557376.out 1K_MaxLines.100LPC
