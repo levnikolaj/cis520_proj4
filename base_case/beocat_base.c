@@ -7,20 +7,21 @@ void algorithm();
 
 void main()
 {
+  int i, j;
   FILE * fd = fopen("/homes/dan/625/wiki_dump.txt", "r");
   char *buffer = NULL;
   size_t n = 0;
   char **wiki_dump = (char **) malloc(1000000 * sizeof(char *));
-  for(int i = 0; i < 1000000; i++)
+  for(i = 0; i < 1000000; i++)
   {
     size_t line_length = getline(&buffer, &n, fd);
     wiki_dump[i] = (char*)malloc((line_length) * sizeof(char));
     memcpy(wiki_dump[i], buffer, sizeof(char) * line_length);
     wiki_dump[i][line_length-2] = 0;
   }
-  for(int i = 0; i < 2; i++)
+  for(i = 0; i < 50; i++)
   {
-    for(int j = 0; wiki_dump[i][j] != 0; j++)
+    for(j = 0; wiki_dump[i][j] != 0; j++)
     {
       printf("%c", wiki_dump[i][j]);
     }
@@ -31,13 +32,14 @@ void main()
 
 void algorithm()
 {
+  int i, j;
 	char s1[] = "afsaldfkjlkshfachodybanksaslkdfjasfochodychodychody";
 	char s2[] = "asdfkllkjchodychodychodybankssfasdfkljsafklsa;dfuask;ldfk";
 	int s1_len = strlen(s1);
 	int s2_len = strlen(s2);
   //int table[s1_len + 1][s2_len + 1];
   int **table = (int **)malloc((s1_len + 1) * sizeof(int *));
-  for(int i = 0; i < s1_len+1; i++)
+  for(i = 0; i < s1_len+1; i++)
     table[i] = (int *)malloc((s2_len + 1) * sizeof(int));
   /*int count = 0;
   for(int i = 0; i < s1_len; i++)
@@ -49,9 +51,9 @@ void algorithm()
 
 
 	//initialize outside of table to zeros
-	for(int i = 0; i <= s1_len; i++)
+	for(i = 0; i <= s1_len; i++)
 		table[i][0] = 0;
-	for(int i = 0; i <= s2_len; i++)
+	for(i = 0; i <= s2_len; i++)
 		table[0][i] = 0;
 
 	int max = 0;
@@ -60,9 +62,9 @@ void algorithm()
 
 	//set rest of table to correct values
 	//get max value of table and store associated column
-	for(int i = 1; i <= s1_len; i++)
+	for(i = 1; i <= s1_len; i++)
 	{
-		for(int j = 1; j <= s2_len; j++)
+		for(j = 1; j <= s2_len; j++)
 		{
 			if(s1[i-1] == s2[j-1])
 			{
@@ -83,13 +85,13 @@ void algorithm()
 	if(max > 0)
 	{
 		char substr[max];
-		for(int i = 1; i <= max; i++)
+		for(i = 1; i <= max; i++)
 		{
 			substr[max-i] = s2[col-i];
 		}
 
 		printf("longest common substring: ");
-		for(int i = 0; i < max; i++)
+		for(i = 0; i < max; i++)
 			printf("%c", substr[i]);
 		printf("\n");
 	}
