@@ -119,8 +119,8 @@ void algorithm()
 	char s2[] = "asdfkllkjchodychodychodybankssfasdfkljsafklsa;dfuask;ldfk";
 	int s1_len = strlen(s1);
 	int s2_len = strlen(s2);
-	//int table[s1_len + 1][s2_len + 1];
-	int table = malloc(sizeof(int) * ((s1_len+1) * (s2_len+1)));
+	int table[s1_len + 1][s2_len + 1];
+
 	//initialize outside of table to zeros
 	for(int i = 0; i <= s1_len; i++)
 		table[i][0] = 0;
@@ -168,5 +168,4 @@ void algorithm()
 	}
 	else
 		printf("No common substring.\n");
-	free(table);
 }
