@@ -1,19 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <omp.h>
-#include <sys/time.h>
 #include <string.h>
 #include <stdint.h>
+#include <omp.h>
 #include "sys/types.h"
 #include "sys/sysinfo.h"
+#include <sys/time.h>
 
+#define NUM_WIKI_LINES 1000000
 
-#define PATH_TO_WIKI_DUMP				"/homes/levnikolaj/Proj4_520/wiki_dump.txt"
-#define MAX_CHARS_READ 					10000000
-/* Dynamically allocated array for storing substrings.
- */
-char **longestSubstring;
-void *findLongestSubstring();
+char **longestCommonSubstring;
+
+void algorithm();
+int parseLine(char *line);
+void GetProcessMemory(processMem_t* processMem);
 
 /* Stucture used to calculate virtual and physical memory.
  */
@@ -61,70 +61,50 @@ void GetProcessMemory(processMem_t* processMem)
 	fclose(file);
 }
 
-//************************************************************
-
-int main()
+void main()
 {
-	// to compile use(gcc -o openmp_comp -fopenmp openmp.c)
-	struct timeval t1, t2;
-	int numOfThreads;
-	processMem_t myMem;
-	double elapsedTime;
+  int i, j;
+  FILE * fd = fopen("/homes/dan/625/wiki_dump.txt", "r");
+  char *buffer = NULL;
+  size_t n = 0;
+  char **wiki_dump = (char **) malloc(NUM_WIKI_LINES * sizeof(char *));
+  longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
 
-	//numOfThreads = atoi(argv[1]); // argv[0] is the program name, argv[1] is the first argument, should be number of threads
+  for(i = 0; i < NUM_WIKI_LINES; i++)
+  {
+    size_t line_length = getline(&buffer, &n, fd);
+    wiki_dump[i] = (char*)malloc((line_length) * sizeof(char));
+    memcpy(wiki_dump[i], buffer, sizeof(char) * line_length);
+    wiki_dump[i][line_length-2] = 0;
+  }
 
-	//omp_set_num_threads(numOfThreads);
-
-	gettimeofday(&t1, NULL);
-
-	/*
-	#pragma omp parallel
-	{
-		 void *functionName(omp_get_thread_num(), numOfThreads);
-	}
-  */
-
-	findLongestSubstring();
-
-	gettimeofday(&t2, NULL);
-	GetProcessMemory(&myMem);
-
-	elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; // sec to ms
-	elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
-
-	printf("Memory: vMem, %u KB, pMem, %u KB\n", myMem.virtualMem, myMem.physicalMem);
-	printf("DATA, %f\n", elapsedTime);
-
+  #pragma omp parallel for
+    for (i = 0; i < NUM_WIKI_LINES - 1; i++)
+    {
+      algorithm(*wiki_dump + i,*wiki_dump + i + 1, i);
+    }
+		// TODO: add memory and time output
 }
 
-void *findLongestSubstring()
+/* The algorithm that finds the longest common substring.
+ * Uses matrix table, dynamic array allocation.
+ *
+ */
+void algorithm(char *firstLine, char*secondLine, int firstEntryIndex)
 {
-	FILE *fd;
-	char firstLine[MAX_CHARS_READ];
-	char secondLine[MAX_CHARS_READ];
-	fd = fopen("/homes/levnikolaj/Proj4_520/wiki_dump.txt", "r");
+  int i, j;
+	int s1_len = strlen(firstLine);
+	int s2_len = strlen(secondLine);
+  //int table[s1_len + 1][s2_len + 1];
+  int **table = (int **)malloc((s1_len + 1) * sizeof(int *));
+  for(i = 0; i < s1_len+1; i++)
+    table[i] = (int *)malloc((s2_len + 1) * sizeof(int));
 
-	fgets(firstLine, MAX_CHARS_READ, fd);
-	fgets(secondLine, MAX_CHARS_READ, fd);
-
-	printf("Line 1, %s\n", firstLine);
-	printf("Line 2, %s\n", secondLine);
-
-	fclose(fd);
-}
-
-void algorithm()
-{
-	char s1[] = "afsaldfkjlkshfachodybanksaslkdfjasfochodychodychody";
-	char s2[] = "asdfkllkjchodychodychodybankssfasdfkljsafklsa;dfuask;ldfk";
-	int s1_len = strlen(s1);
-	int s2_len = strlen(s2);
-	int table[s1_len + 1][s2_len + 1];
 
 	//initialize outside of table to zeros
-	for(int i = 0; i <= s1_len; i++)
+	for(i = 0; i <= s1_len; i++)
 		table[i][0] = 0;
-	for(int i = 0; i <= s2_len; i++)
+	for(i = 0; i <= s2_len; i++)
 		table[0][i] = 0;
 
 	int max = 0;
@@ -133,9 +113,9 @@ void algorithm()
 
 	//set rest of table to correct values
 	//get max value of table and store associated column
-	for(int i = 1; i <= s1_len; i++)
+	for(i = 1; i <= s1_len; i++)
 	{
-		for(int j = 1; j <= s2_len; j++)
+		for(j = 1; j <= s2_len; j++)
 		{
 			if(s1[i-1] == s2[j-1])
 			{
@@ -156,16 +136,23 @@ void algorithm()
 	if(max > 0)
 	{
 		char substr[max];
-		for(int i = 1; i <= max; i++)
+		for(i = 1; i <= max; i++)
 		{
 			substr[max-i] = s2[col-i];
 		}
 
 		printf("longest common substring: ");
-		for(int i = 0; i < max; i++)
-			printf("%c", substr[i]);
+		for(i = 0; i < max; i++)
+    {
+      // TODO: add to longestCommonSubstring array, critical section
+      // malloc char* into longestCommonSubstring and memcpy
+    	printf("%c", substr[i]);
+    }
+
 		printf("\n");
 	}
 	else
-		printf("No common substring.\n");
+		printf("No common substring.\n"); // TODO: add to longestCommonSubstring array, critical section
+
+	free(table);
 }
