@@ -1,5 +1,6 @@
 How to run openmp on beocat?
 Make sure the files have UNIX line terminators (Notepad++: Edit -> EOL Converstion -> Unix/LF)
+Make sure to execute access on shell scripts (chmod u=x filename, some variation of command)
 
 1. Create object file
 
