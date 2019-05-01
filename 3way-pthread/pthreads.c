@@ -10,6 +10,7 @@
 #define NUM_WIKI_LINES 1000000
 
 char **longestCommonSubstring;
+pthread_mutex_t mutexsum; // mutex for adding to longestCommonSubstring
 
 void* algorithm(void* args);
 
@@ -75,7 +76,13 @@ void main()
   char **wiki_dump = (char **) malloc(NUM_WIKI_LINES * sizeof(char *));
   longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
 
-	pthread_t threads[2];
+	int numOfThreads = 3; //TODO: get from command line argument
+	int linesToProcess = 100;
+	int sectionSize = linesToProcess/numOfThreads;
+	int rc;
+	void *status;
+
+	pthread_t threads[numOfThreads];
 	pthread_attr_t attr;
 
 	pthread_attr_init(&attr);
@@ -88,12 +95,6 @@ void main()
     memcpy(wiki_dump[i], buffer, sizeof(char) * line_length);
     wiki_dump[i][line_length-2] = 0;
   }
-
-	int numOfThreads = 2; //TODO: get from command line argument
-	int linesToProcess = 100;
-	int sectionSize = linesToProcess/numOfThreads;
-	int rc;
-	void *status;
 
 	for(i = 0; i < numOfThreads; i++) // i < numOfThreads
 	{
@@ -204,12 +205,14 @@ void* algorithm(void* parameters)
 			{
 				substr[max-i] = s2[col-i];
 			}
-
+			pthread_mutex_lock(&mutexsum);
 			longestCommonSubstring[p] = (char *) malloc((max) * sizeof(char));
 			memcpy(longestCommonSubstring[p], substr, sizeof(char) * max);
 			longestCommonSubstring[p][max-1] = 0;
+			pthread_mutex_unlock (&mutexsum);
 		}
 
 		free(table);
 	}
+	pthread_exit(NULL);
 }
