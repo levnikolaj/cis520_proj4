@@ -12,8 +12,6 @@
 char **longestCommonSubstring;
 
 void algorithm();
-int parseLine(char *line);
-void GetProcessMemory(processMem_t* processMem);
 
 /* Stucture used to calculate virtual and physical memory.
  */
@@ -70,6 +68,8 @@ void main()
   char **wiki_dump = (char **) malloc(NUM_WIKI_LINES * sizeof(char *));
   longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
 
+	omp_set_num_threads(2);
+
   for(i = 0; i < NUM_WIKI_LINES; i++)
   {
     size_t line_length = getline(&buffer, &n, fd);
@@ -79,80 +79,95 @@ void main()
   }
 
   #pragma omp parallel for
-    for (i = 0; i < NUM_WIKI_LINES - 1; i++)
+    for (i = 0; i < 100; i++) // i < NUM_WIKI_LINES - 1
     {
-      algorithm(*wiki_dump + i,*wiki_dump + i + 1, i);
+      algorithm(wiki_dump, i);
     }
 		// TODO: add memory and time output
+
+	for(i = 0; i < 100; i++) // i < NUM_WIKI_LINES - 1
+	{
+		printf("Lines%d-%d: ", i, i+1);
+		if(longestCommonSubstring[i] != NULL)
+		{
+			printf("%s\n", longestCommonSubstring[i]);
+		}
+		else
+		{
+			printf("None found\n");
+		}
+	}
+
+	free(wiki_dump);
 }
 
 /* The algorithm that finds the longest common substring.
  * Uses matrix table, dynamic array allocation.
  *
  */
-void algorithm(char *firstLine, char*secondLine, int firstEntryIndex)
+void algorithm(char **wiki_dump, int firstEntryIndex)
 {
-  int i, j;
-	int s1_len = strlen(firstLine);
-	int s2_len = strlen(secondLine);
-  //int table[s1_len + 1][s2_len + 1];
-  int **table = (int **)malloc((s1_len + 1) * sizeof(int *));
-  for(i = 0; i < s1_len+1; i++)
-    table[i] = (int *)malloc((s2_len + 1) * sizeof(int));
+  int i, j, s1_len, s2_len, col, val, max = 0;
+	//printf("ThreadNum: %d; %d\n", omp_get_thread_num(), firstEntryIndex);
 
-
-	//initialize outside of table to zeros
-	for(i = 0; i <= s1_len; i++)
-		table[i][0] = 0;
-	for(i = 0; i <= s2_len; i++)
-		table[0][i] = 0;
-
-	int max = 0;
-	int col;
-	int val;
-
-	//set rest of table to correct values
-	//get max value of table and store associated column
-	for(i = 1; i <= s1_len; i++)
+	#pragma omp private(i, j, s1_len, s2_len, s1, s2, max, col, val)
 	{
-		for(j = 1; j <= s2_len; j++)
+		char *s1 = wiki_dump[firstEntryIndex];
+		char *s2 = wiki_dump[firstEntryIndex + 1];
+		s1_len = strlen(wiki_dump[firstEntryIndex]);
+		s2_len = strlen(wiki_dump[firstEntryIndex + 1]);
+		//printf("ThreadNum: %d; s1_len:%d; s2_len:%d\n", omp_get_thread_num(), s1, s2);
+	  //int table[s1_len + 1][s2_len + 1];
+
+	  int **table = (int **)malloc((s1_len + 1) * sizeof(int *));
+	  for(i = 0; i < s1_len+1; i++)
+	    table[i] = (int *)malloc((s2_len + 1) * sizeof(int));
+
+
+		//initialize outside of table to zeros
+		for(i = 0; i <= s1_len; i++)
+			table[i][0] = 0;
+		for(i = 0; i <= s2_len; i++)
+			table[0][i] = 0;
+
+		//set rest of table to correct values
+		//get max value of table and store associated column
+		for(i = 1; i <= s1_len; i++)
 		{
-			if(s1[i-1] == s2[j-1])
+			for(j = 1; j <= s2_len; j++)
 			{
-				val = table[i-1][j-1] + 1;
-				table[i][j] = val;
-				if(val > max)
+				if(s1[i-1] == s2[j-1])
 				{
-					max = val;
-					col = j;
+					val = table[i-1][j-1] + 1;
+					table[i][j] = val;
+					if(val > max)
+					{
+						max = val;
+						col = j;
+					}
 				}
+				else
+					table[i][j] = 0;
 			}
-			else
-				table[i][j] = 0;
 		}
-	}
 
-	//create longest substring based on index of max value
-	if(max > 0)
-	{
-		char substr[max];
-		for(i = 1; i <= max; i++)
+		//create longest substring based on index of max value
+		if(max > 0)
 		{
-			substr[max-i] = s2[col-i];
+			char substr[max];
+			for(i = 1; i <= max; i++)
+			{
+				substr[max-i] = s2[col-i];
+			}
+
+			#pragma omg critical
+			{
+				longestCommonSubstring[firstEntryIndex] = (char *) malloc((max) * sizeof(char));
+				memcpy(longestCommonSubstring[firstEntryIndex], substr, sizeof(char) * max);
+				longestCommonSubstring[firstEntryIndex][max-1] = 0;
+			}
 		}
 
-		printf("longest common substring: ");
-		for(i = 0; i < max; i++)
-    {
-      // TODO: add to longestCommonSubstring array, critical section
-      // malloc char* into longestCommonSubstring and memcpy
-    	printf("%c", substr[i]);
-    }
-
-		printf("\n");
+		free(table);
 	}
-	else
-		printf("No common substring.\n"); // TODO: add to longestCommonSubstring array, critical section
-
-	free(table);
 }
