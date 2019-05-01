@@ -79,14 +79,14 @@ void main()
   }
 
   #pragma omp parallel for
-    for (i = 0; i < 100; i++) // i < NUM_WIKI_LINES - 1
+    for (i = 0; i < 100; i++) //TODO: i < NUM_WIKI_LINES - 1
     {
 			// pragma omp single nowait...
       algorithm(wiki_dump, i);
     }
 		// TODO: add memory and time output
 
-	for(i = 0; i < 100; i++) // i < NUM_WIKI_LINES - 1
+	for(i = 0; i < 100; i++) //TODO: i < NUM_WIKI_LINES - 1
 	{
 		printf("Lines%d-%d: ", i, i+1);
 		if(longestCommonSubstring[i] != NULL)
