@@ -12,4 +12,4 @@ gcc -o pthreads_comp -pthread pthreads.c
 OR
 sbatch --constraint=elves --time=0:10:00 --mem-per-cpu=5G --nodes=1 --cpus-per-task=2 shell_script_pthreads.sh
 
-shell_script_openmp.sh -> /homes/levnikolaj/Proj4_520/3way-pthread/pthreads_comp
+shell_script_pthreads.sh -> /homes/levnikolaj/Proj4_520/3way-pthread/pthreads_comp
