@@ -155,7 +155,6 @@ void* algorithm(void* parameters)
 {
 	algorithmArgs_t *args = (algorithmArgs_t *) parameters;
   int p, i, j, s1_len, s2_len, col, val, max = 0;
-	pthread_t self_id = pthread_self();
 	//printf("Thread:%u, s:%d, e:%d\n", self_id, args->startIndex, args->endIndex);
 	//printf("ThreadNum: %d; %d\n", omp_get_thread_num(), firstEntryIndex);
 	for(p = args->startIndex; p <= args->endIndex; p++) // endIndex is -1 before set
@@ -217,5 +216,6 @@ void* algorithm(void* parameters)
 
 		free(table);
 	}
+	free(args);
 	pthread_exit(NULL);
 }
