@@ -76,7 +76,7 @@ void main()
   char **wiki_dump = (char **) malloc(NUM_WIKI_LINES * sizeof(char *));
   longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
 
-	int numOfThreads = 3; //TODO: get from command line argument
+	int numOfThreads = 2; //TODO: get from command line argument
 	int linesToProcess = 100;
 	int sectionSize = linesToProcess/numOfThreads;
 	int rc;
@@ -98,19 +98,19 @@ void main()
 
 	for(i = 0; i < numOfThreads; i++) // i < numOfThreads
 	{
-		algorithmArgs_t args;
-		args.wiki_dump = wiki_dump;
-		args.startIndex = i * sectionSize;
+		algorithmArgs_t *args = (algorithmArgs_t*) malloc(sizeof(algorithmArgs_t));
+		args->wiki_dump = wiki_dump;
+		args->startIndex = i * sectionSize;
 		if(i != (numOfThreads - 1))
 		{
-			args.endIndex = (i + 1) * sectionSize - 1; // OR without -1 and have algorithm run to < instead of <=
+			args->endIndex = (i + 1) * sectionSize - 1; // OR without -1 and have algorithm run to < instead of <=
 		}
 		else
 		{
-			args.endIndex = linesToProcess - 1;
+			args->endIndex = linesToProcess - 1;
 		}
 
-		rc = pthread_create(&threads[i], &attr, algorithm, (void*)&args);
+		rc = pthread_create(&threads[i], &attr, algorithm, (void*)args);
 		if(rc)
 		{
 			printf("ERROR; return code from pthread_create() is %d\n", rc);
@@ -155,6 +155,8 @@ void* algorithm(void* parameters)
 {
 	algorithmArgs_t *args = (algorithmArgs_t *) parameters;
   int p, i, j, s1_len, s2_len, col, val, max = 0;
+	pthread_t self_id = pthread_self();
+	//printf("Thread:%u, s:%d, e:%d\n", self_id, args->startIndex, args->endIndex);
 	//printf("ThreadNum: %d; %d\n", omp_get_thread_num(), firstEntryIndex);
 	for(p = args->startIndex; p <= args->endIndex; p++) // endIndex is -1 before set
 	{
@@ -205,6 +207,7 @@ void* algorithm(void* parameters)
 			{
 				substr[max-i] = s2[col-i];
 			}
+			//printf("p:%d %u\n", p, self_id);
 			pthread_mutex_lock(&mutexsum);
 			longestCommonSubstring[p] = (char *) malloc((max) * sizeof(char));
 			memcpy(longestCommonSubstring[p], substr, sizeof(char) * max);
