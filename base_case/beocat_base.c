@@ -7,13 +7,13 @@
 #include <sys/time.h>
 
 void algorithm();
-#define NUM_WIKI_LINES 2 //Should be 1000000
+#define NUM_WIKI_LINES 100 //Should be 1000000
 
 void main()
 {
   int i, j, p;
-  //FILE * fd = fopen("/homes/dan/625/wiki_dump.txt", "r");
-  FILE * fd = fopen("test.txt", "r");
+  FILE * fd = fopen("/homes/dan/625/wiki_dump.txt", "r");
+  //FILE * fd = fopen("test.txt", "r");
   char *buffer = NULL;
   size_t n = 0;
   char **longestCommonSubstring = (char**) malloc((NUM_WIKI_LINES-1) * sizeof(char*));
@@ -28,7 +28,7 @@ void main()
   fclose(fd);
   //Run Algorithm
   p = 0;
-  for(i = 0; i < 1; i++, p++)
+  for(i = 0; i < NUM_WIKI_LINES - 1; i++, p++)
   {
     algorithm(wiki_dump[i], wiki_dump[i+1], longestCommonSubstring, p);
   }
@@ -97,10 +97,10 @@ void algorithm(char *s1, char *s2, char ** resultsArray, int p)
     for(i = 1; i <= max; i++)
     {
       substr[max-i] = s2[col-i];
-      resultsArray[p] = (char *) malloc((max) * sizeof(char));
-			memcpy(resultsArray[p], substr, sizeof(char) * max);
-			resultsArray[p][max] = 0;
     }
+    resultsArray[p] = (char *) malloc((max + 1) * sizeof(char));
+    memcpy(resultsArray[p], substr, sizeof(char) * max);
+    resultsArray[p][max] = 0;
 	}
 	free(table);
 }

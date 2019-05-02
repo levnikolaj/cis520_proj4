@@ -9,7 +9,7 @@
 
 #define NUM_WIKI_LINES 1000000
 
-char **longestCommonSubstring;
+
 pthread_mutex_t mutexsum; // mutex for adding to longestCommonSubstring
 
 void* algorithm(void* args);
@@ -26,6 +26,7 @@ typedef struct
 
 typedef struct
 {
+	char **longestCommonSubstring;
 	char **wiki_dump;
 	int startIndex;
 	int endIndex;
@@ -44,7 +45,7 @@ int parseLine(char *line)
 	return i;
 }
 
-/* Calculates the physical and virtual memory used.
+/* Calculates the physical and virtual memory used
  */
 void GetProcessMemory(processMem_t* processMem)
 {
@@ -74,9 +75,9 @@ void main()
   char *buffer = NULL;
   size_t n = 0;
   char **wiki_dump = (char **) malloc(NUM_WIKI_LINES * sizeof(char *));
-  longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
+  char **longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
 
-	int numOfThreads = 2; //TODO: get from command line argument
+	int numOfThreads = 1; //TODO: get from command line argument
 	int linesToProcess = 100;
 	int sectionSize = linesToProcess/numOfThreads;
 	int rc;
@@ -96,10 +97,16 @@ void main()
     wiki_dump[i][line_length-2] = 0;
   }
 
+	for(i = 0; i < 10; i++)
+	{
+		printf("%s\n", wiki_dump[i]);
+	}
+
 	for(i = 0; i < numOfThreads; i++) // i < numOfThreads
 	{
 		algorithmArgs_t *args = (algorithmArgs_t*) malloc(sizeof(algorithmArgs_t));
 		args->wiki_dump = wiki_dump;
+		args->longestCommonSubstring = longestCommonSubstring;
 		args->startIndex = i * sectionSize;
 		if(i != (numOfThreads - 1))
 		{
@@ -130,8 +137,7 @@ void main()
 	}
 
 	// TODO: add memory and time output
-
-	for(i = 0; i < 100; i++) // i < NUM_WIKI_LINES - 1
+	for(i = 0; i < linesToProcess; i++) // i < NUM_WIKI_LINES - 1
 	{
 		printf("Lines%d-%d: ", i, i+1);
 		if(longestCommonSubstring[i] != NULL)
@@ -144,6 +150,7 @@ void main()
 		}
 	}
 
+	free(longestCommonSubstring);
 	free(wiki_dump);
 }
 
@@ -208,12 +215,16 @@ void* algorithm(void* parameters)
 			}
 			//printf("p:%d %u\n", p, self_id);
 			pthread_mutex_lock(&mutexsum);
-			longestCommonSubstring[p] = (char *) malloc((max) * sizeof(char));
-			memcpy(longestCommonSubstring[p], substr, sizeof(char) * max);
-			longestCommonSubstring[p][max-1] = 0;
+			args->longestCommonSubstring[p] = (char *) malloc((max + 1) * sizeof(char));
+			memcpy(args->longestCommonSubstring[p], substr, sizeof(char) * max);
+			args->longestCommonSubstring[p][max] = 0;
 			pthread_mutex_unlock (&mutexsum);
 		}
 
+		for(i = 0; i < s1_len; i++)
+		{
+			free(table[i]);
+		}
 		free(table);
 	}
 	free(args);

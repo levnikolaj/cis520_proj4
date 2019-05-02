@@ -9,7 +9,7 @@
 
 #define NUM_WIKI_LINES 1000000
 
-char **longestCommonSubstring;
+
 
 void algorithm();
 
@@ -66,9 +66,9 @@ void main()
   char *buffer = NULL;
   size_t n = 0;
   char **wiki_dump = (char **) malloc(NUM_WIKI_LINES * sizeof(char *));
-  longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
+  char **longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
 
-	omp_set_num_threads(2);
+	omp_set_num_threads(6);
 
   for(i = 0; i < NUM_WIKI_LINES; i++)
   {
@@ -79,26 +79,27 @@ void main()
   }
 
   #pragma omp parallel for
-    for (i = 0; i < 100; i++) //TODO: i < NUM_WIKI_LINES - 1
+    for (i = 0; i < NUM_WIKI_LINES - 1; i++) //TODO: i < NUM_WIKI_LINES - 1
     {
 			// pragma omp single nowait...
-      algorithm(wiki_dump, i);
+      algorithm(wiki_dump, longestCommonSubstring, i);
     }
 		// TODO: add memory and time output
 
-	for(i = 0; i < 100; i++) //TODO: i < NUM_WIKI_LINES - 1
+	for(i = 0; i < NUM_WIKI_LINES - 1; i++) //TODO: i < NUM_WIKI_LINES - 1
 	{
 		printf("Lines%d-%d: ", i, i+1);
 		if(longestCommonSubstring[i] != NULL)
 		{
 			printf("%s\n", longestCommonSubstring[i]);
+			free(longestCommonSubstring[i]);
 		}
 		else
 		{
 			printf("None found\n");
 		}
 	}
-
+	free(longestCommonSubstring);
 	free(wiki_dump);
 }
 
@@ -106,7 +107,7 @@ void main()
  * Uses matrix table, dynamic array allocation.
  *
  */
-void algorithm(char **wiki_dump, int firstEntryIndex)
+void algorithm(char **wiki_dump, char **longestCommonSubstring, int firstEntryIndex)
 {
   int i, j, s1_len, s2_len, col, val, max = 0;
 	//printf("ThreadNum: %d; %d\n", omp_get_thread_num(), firstEntryIndex);
@@ -163,12 +164,15 @@ void algorithm(char **wiki_dump, int firstEntryIndex)
 
 			#pragma omg critical
 			{
-				longestCommonSubstring[firstEntryIndex] = (char *) malloc((max) * sizeof(char));
+				longestCommonSubstring[firstEntryIndex] = (char *) malloc((max + 1) * sizeof(char));
 				memcpy(longestCommonSubstring[firstEntryIndex], substr, sizeof(char) * max);
-				longestCommonSubstring[firstEntryIndex][max-1] = 0;
+				longestCommonSubstring[firstEntryIndex][max] = 0;
 			}
 		}
-
+		for(i = 0; i < s1_len; i++)
+		{
+			free(table[i]);
+		}
 		free(table);
 	}
 }
