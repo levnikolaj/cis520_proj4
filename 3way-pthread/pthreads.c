@@ -68,7 +68,7 @@ void GetProcessMemory(processMem_t* processMem)
 	fclose(file);
 }
 
-void main()
+void main(int argc, char *argv[])
 {
   int i, j;
   FILE * fd = fopen("/homes/dan/625/wiki_dump.txt", "r");
@@ -77,8 +77,8 @@ void main()
   char **wiki_dump = (char **) malloc(NUM_WIKI_LINES * sizeof(char *));
   char **longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
 
-	int numOfThreads = 1; //TODO: get from command line argument
-	int linesToProcess = 100;
+	int numOfThreads = atoi(argv[1]); //TODO: get from command line argument
+	int linesToProcess = NUM_WIKI_LINES;
 	int sectionSize = linesToProcess/numOfThreads;
 	int rc;
 	void *status;

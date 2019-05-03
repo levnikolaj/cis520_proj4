@@ -59,16 +59,18 @@ void GetProcessMemory(processMem_t* processMem)
 	fclose(file);
 }
 
-void main()
+void main(int argc, char *argv[])
 {
-  int i, j;
+  int i, j, numOfThreads;
   FILE * fd = fopen("/homes/dan/625/wiki_dump.txt", "r");
   char *buffer = NULL;
   size_t n = 0;
   char **wiki_dump = (char **) malloc(NUM_WIKI_LINES * sizeof(char *));
   char **longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
 
-	omp_set_num_threads(6);
+	numOfThreads = atoi(argv[1]);
+
+	omp_set_num_threads(numOfThreads);
 
   for(i = 0; i < NUM_WIKI_LINES; i++)
   {
