@@ -166,6 +166,8 @@ void* algorithm(void* parameters)
 	//printf("ThreadNum: %d; %d\n", omp_get_thread_num(), firstEntryIndex);
 	for(p = args->startIndex; p <= args->endIndex; p++) // endIndex is -1 before set
 	{
+		max = 0;
+		// TODO: check pointer
 		char *s1 = args->wiki_dump[p];
 		char *s2 = args->wiki_dump[p + 1];
 		s1_len = strlen(args->wiki_dump[p]);
