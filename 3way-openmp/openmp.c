@@ -61,10 +61,13 @@ void GetProcessMemory(processMem_t* processMem)
 
 void main(int argc, char *argv[])
 {
+	struct timeval t1, t2;
   int i, j, numOfThreads;
   FILE * fd = fopen("/homes/dan/625/wiki_dump.txt", "r");
   char *buffer = NULL;
   size_t n = 0;
+	processMem_t myMem;
+	double elapsedTime = 0.0;
   char **wiki_dump = (char **) malloc(NUM_WIKI_LINES * sizeof(char *));
   char **longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
 
@@ -80,6 +83,8 @@ void main(int argc, char *argv[])
     wiki_dump[i][line_length-2] = 0;
   }
 
+	gettimeofday(&t1, NULL);
+
   #pragma omp parallel for
     for (i = 0; i < NUM_WIKI_LINES - 1; i++) //TODO: i < NUM_WIKI_LINES - 1
     {
@@ -88,6 +93,16 @@ void main(int argc, char *argv[])
     }
 		// TODO: add memory and time output
 
+	gettimeofday(&t2, NULL);
+	GetProcessMemory(&myMem);
+
+	elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
+	elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
+
+	printf("Memory, Threads, %d, vMem, %u KB, pMem, %u KB\n", numOfThreads, myMem.virtualMem, myMem.physicalMem);
+	printf("DATA, %f, Threads, %d\n", elapsedTime, numOfThreads);
+
+	/*
 	for(i = 0; i < NUM_WIKI_LINES - 1; i++) //TODO: i < NUM_WIKI_LINES - 1
 	{
 		printf("Lines%d-%d: ", i, i+1);
@@ -100,7 +115,8 @@ void main(int argc, char *argv[])
 		{
 			printf("None found\n");
 		}
-	}
+	}*/
+
 	free(longestCommonSubstring);
 	free(wiki_dump);
 }

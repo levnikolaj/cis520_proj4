@@ -14,6 +14,49 @@
 void algorithm(char **wiki_dump, char **longestCommonSubstring, int chunkSize);
 void printData(char **longestCommonSubstring, int chunkSize, int rank);
 
+typedef struct
+{
+	uint32_t virtualMem;
+	uint32_t physicalMem;
+} processMem_t;
+
+/* This function is called in GetProcessMemory() to parse the parse
+ * line and return the uint32_t value of it.
+ */
+int parseLine(char *line)
+{
+	// This assumes that a digit will be found and the line ends in " Kb".
+	int i = strlen(line);
+	const char *p = line;
+	while (*p < '0' || *p > '9') p++;
+	line[i - 3] = '\0';
+	i = atoi(p);
+	return i;
+}
+
+/* Calculates the physical and virtual memory used.
+ */
+void GetProcessMemory(processMem_t* processMem)
+{
+	FILE *file = fopen("/proc/self/status", "r");
+	char line[128];
+
+	while (fgets(line, 128, file) != NULL)
+	{
+		//printf("%s", line);
+		if (strncmp(line, "VmSize:", 7) == 0)
+		{
+			processMem->virtualMem = parseLine(line);
+		}
+
+		if (strncmp(line, "VmRSS:", 6) == 0)
+		{
+			processMem->physicalMem = parseLine(line);
+		}
+	}
+	fclose(file);
+}
+
 int main(int argc, char *argv[])
 {
 	/* Know how many processes there are. Find even section size and BCast
@@ -25,6 +68,9 @@ int main(int argc, char *argv[])
 	 * to process 0, the main process. A Barrier might be needed to synchronize
 	 * the processes among each other. From there need to print the output.
 	 */
+	 double elapsedTime = 0.0;
+	 struct timeval t1, t2;
+	 processMem_t myMem;
 	 long tag;
 	 int linesToProcess = NUM_WIKI_LINES;
 	 int rc, numTasks, rank, startIndex, endIndex, i, j, chunkSize;
@@ -48,8 +94,8 @@ int main(int argc, char *argv[])
 
 	 // TODO: don't forget to get time with rank 0
 
-	 printf("size = %d rank = %d\n", numTasks, rank);
-	 fflush(stdout); // fflush should accompany almost every printf. Helps guarantee output
+	 //printf("size = %d rank = %d\n", numTasks, rank);
+	 //fflush(stdout); // fflush should accompany almost every printf. Helps guarantee output
 
 	 // rank 0 is task 1, numTasks is 1 greater than last rank.
 	 chunkSize = linesToProcess/numTasks;
@@ -86,10 +132,11 @@ int main(int argc, char *argv[])
 		 printf("i = %d, %s\n", i, wiki_dump[i]);
 	 }
 	 */
+	 gettimeofday(&t1, NULL);
 	 algorithm(wiki_dump, longestCommonSubstring, chunkSize);
 
 	 MPI_Barrier(MPI_COMM_WORLD);
-
+	 /*
 	 if(rank == 0)
 	 {
 		 printData(longestCommonSubstring, chunkSize, rank);
@@ -107,10 +154,21 @@ int main(int argc, char *argv[])
 		 tag = TAG_DONE_PRINTING;
 		 MPI_Send(&tag, 1, MPI_LONG, 0, TAG_DONE_PRINTING, MPI_COMM_WORLD);
 	 }
+	 */
 
+	 gettimeofday(&t2, NULL);
+	 GetProcessMemory(&myMem);
 	 free(longestCommonSubstring);
 	 MPI_Finalize();
 
+	 elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
+ 	 elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
+
+	 if(rank == 0)
+	 {
+	 	 printf("Memory, Processes, %d, vMem, %u KB, pMem, %u KB\n", numTasks, myMem.virtualMem, myMem.physicalMem);
+ 	 	 printf("DATA, %f, Processes, %d\n", elapsedTime, numTasks);
+ 	 }
 	 return 0;
 }
 

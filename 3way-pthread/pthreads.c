@@ -74,9 +74,11 @@ void main(int argc, char *argv[])
   FILE * fd = fopen("/homes/dan/625/wiki_dump.txt", "r");
   char *buffer = NULL;
   size_t n = 0;
+	double elapsedTime = 0.0;
   char **wiki_dump = (char **) malloc(NUM_WIKI_LINES * sizeof(char *));
   char **longestCommonSubstring = (char **) malloc((NUM_WIKI_LINES - 1)* sizeof(char *));
-
+	processMem_t myMem;
+	struct timeval t1, t2;
 	int numOfThreads = atoi(argv[1]); //TODO: get from command line argument
 	int linesToProcess = NUM_WIKI_LINES;
 	int sectionSize = linesToProcess/numOfThreads;
@@ -96,11 +98,13 @@ void main(int argc, char *argv[])
     memcpy(wiki_dump[i], buffer, sizeof(char) * line_length);
     wiki_dump[i][line_length-2] = 0;
   }
-
+	/*
 	for(i = 0; i < 10; i++)
 	{
 		printf("%s\n", wiki_dump[i]);
 	}
+	*/
+	gettimeofday(&t1, NULL);
 
 	for(i = 0; i < numOfThreads; i++) // i < numOfThreads
 	{
@@ -108,6 +112,7 @@ void main(int argc, char *argv[])
 		args->wiki_dump = wiki_dump;
 		args->longestCommonSubstring = longestCommonSubstring;
 		args->startIndex = i * sectionSize;
+
 		if(i != (numOfThreads - 1))
 		{
 			args->endIndex = (i + 1) * sectionSize - 1; // OR without -1 and have algorithm run to < instead of <=
@@ -116,7 +121,7 @@ void main(int argc, char *argv[])
 		{
 			args->endIndex = linesToProcess - 1;
 		}
-
+		//printf("Iteration:%d, start:%d, end:%d\n", i, args->startIndex, args->endIndex);
 		rc = pthread_create(&threads[i], &attr, algorithm, (void*)args);
 		if(rc)
 		{
@@ -124,6 +129,8 @@ void main(int argc, char *argv[])
 			exit(-1);
 		}
 	}
+
+	GetProcessMemory(&myMem);
 
 	pthread_attr_destroy(&attr);
 	for(i = 0; i < numOfThreads; i++)
@@ -135,6 +142,15 @@ void main(int argc, char *argv[])
 			exit(-1);
 		}
 	}
+
+	gettimeofday(&t2, NULL);
+
+	elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0; //sec to ms
+	elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0; // us to ms
+
+	printf("Memory, Threads, %d, vMem, %u KB, pMem, %u KB\n", numOfThreads, myMem.virtualMem, myMem.physicalMem);
+	printf("DATA, %f, Threads, %d\n", elapsedTime, numOfThreads);
+
 
 	// TODO: add memory and time output
 	for(i = 0; i < linesToProcess; i++) // i < NUM_WIKI_LINES - 1
@@ -163,7 +179,6 @@ void* algorithm(void* parameters)
 	algorithmArgs_t *args = (algorithmArgs_t *) parameters;
   int p, i, j, s1_len, s2_len, col, val, max = 0;
 	//printf("Thread:%u, s:%d, e:%d\n", self_id, args->startIndex, args->endIndex);
-	//printf("ThreadNum: %d; %d\n", omp_get_thread_num(), firstEntryIndex);
 	for(p = args->startIndex; p <= args->endIndex; p++) // endIndex is -1 before set
 	{
 		max = 0;
@@ -172,8 +187,6 @@ void* algorithm(void* parameters)
 		char *s2 = args->wiki_dump[p + 1];
 		s1_len = strlen(args->wiki_dump[p]);
 		s2_len = strlen(args->wiki_dump[p + 1]);
-		//printf("ThreadNum: %d; s1_len:%d; s2_len:%d\n", omp_get_thread_num(), s1, s2);
-	  //int table[s1_len + 1][s2_len + 1];
 
 	  int **table = (int **)malloc((s1_len + 1) * sizeof(int *));
 	  for(i = 0; i < s1_len+1; i++)
@@ -223,7 +236,7 @@ void* algorithm(void* parameters)
 			pthread_mutex_unlock (&mutexsum);
 		}
 
-		for(i = 0; i < s1_len; i++)
+		for(i = 0; i < s1_len + 1; i++)
 		{
 			free(table[i]);
 		}

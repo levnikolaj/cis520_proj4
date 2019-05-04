@@ -18,7 +18,7 @@ mpicc -o mpi_comp mpi.c
     ...
 
 Each shell script (ex: shell1.sh) contains something like this...
-Change '--nodes' & '--ntasks-per-node' to change MPI specificationss
+Change '--nodes' & '--ntasks-per-node' to change MPI specifications
 
 #!/bin/bash -l
 
