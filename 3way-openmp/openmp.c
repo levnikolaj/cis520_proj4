@@ -102,7 +102,7 @@ void main(int argc, char *argv[])
 	printf("Memory, Threads, %d, vMem, %u KB, pMem, %u KB\n", numOfThreads, myMem.virtualMem, myMem.physicalMem);
 	printf("DATA, %f, Threads, %d\n", elapsedTime, numOfThreads);
 
-	/*
+
 	for(i = 0; i < NUM_WIKI_LINES - 1; i++) //TODO: i < NUM_WIKI_LINES - 1
 	{
 		printf("Lines%d-%d: ", i, i+1);
@@ -115,7 +115,7 @@ void main(int argc, char *argv[])
 		{
 			printf("None found\n");
 		}
-	}*/
+	}
 
 	free(longestCommonSubstring);
 	free(wiki_dump);

@@ -153,7 +153,6 @@ void main(int argc, char *argv[])
 
 
 	// TODO: add memory and time output
-	/*
 	for(i = 0; i < linesToProcess - 1; i++) // i < NUM_WIKI_LINES - 1
 	{
 		printf("Lines%d-%d: ", i, i+1);
@@ -166,7 +165,7 @@ void main(int argc, char *argv[])
 			printf("None found\n");
 		}
 	}
-	*/
+
 
 	free(longestCommonSubstring);
 	free(wiki_dump);

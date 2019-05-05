@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
 	 algorithm(wiki_dump, longestCommonSubstring, chunkSize);
 
 	 MPI_Barrier(MPI_COMM_WORLD);
-	 /*
+
 	 if(rank == 0)
 	 {
 		 printData(longestCommonSubstring, chunkSize, rank);
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 		 tag = TAG_DONE_PRINTING;
 		 MPI_Send(&tag, 1, MPI_LONG, 0, TAG_DONE_PRINTING, MPI_COMM_WORLD);
 	 }
-	 */
+
 
 	 gettimeofday(&t2, NULL);
 	 GetProcessMemory(&myMem);
