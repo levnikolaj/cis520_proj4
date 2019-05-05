@@ -1,20 +1,20 @@
-slurm-3473582.out:DATA, 6706640.933000, Threads, 2
-slurm-3473583.out:DATA, 3660243.287000, Threads, 4
-slurm-3473584.out:DATA, 1907822.066000, Threads, 8
-slurm-3473585.out:DATA, 958081.702000, Threads, 16
-slurm-3473587.out:DATA, 7712361.438000, Threads, 2
-slurm-3473588.out:DATA, 3638080.095000, Threads, 4
-slurm-3473589.out:DATA, 1856027.850000, Threads, 8
-slurm-3473590.out:DATA, 955565.252000, Threads, 16
-slurm-3473593.out:DATA, 7458621.021000, Threads, 2
-slurm-3473594.out:DATA, 3749908.226000, Threads, 4
-slurm-3473595.out:DATA, 1941523.327000, Threads, 8
-slurm-3473596.out:DATA, 945827.059000, Threads, 16
-slurm-3473598.out:DATA, 8408241.161000, Threads, 2
-slurm-3473599.out:DATA, 3263864.967000, Threads, 4
-slurm-3473600.out:DATA, 1879406.806000, Threads, 8
-slurm-3473601.out:DATA, 1054153.155000, Threads, 16
-slurm-3473604.out:DATA, 6867138.799000, Threads, 2
-slurm-3473606.out:DATA, 3835199.518000, Threads, 4
-slurm-3473607.out:DATA, 1951284.383000, Threads, 8
-slurm-3473608.out:DATA, 1046650.964000, Threads, 16
+slurm-3473582.out:DATA,6706640.933, Threads,2
+slurm-3473583.out:DATA,3660243.287, Threads,4
+slurm-3473584.out:DATA,1907822.066, Threads,8
+slurm-3473585.out:DATA,958081.702, Threads,16
+slurm-3473587.out:DATA,7712361.438, Threads,2
+slurm-3473588.out:DATA,3638080.095, Threads,4
+slurm-3473589.out:DATA,1856027.85, Threads,8
+slurm-3473590.out:DATA,955565.252, Threads,16
+slurm-3473593.out:DATA,7458621.021, Threads,2
+slurm-3473594.out:DATA,3749908.226, Threads,4
+slurm-3473595.out:DATA,1941523.327, Threads,8
+slurm-3473596.out:DATA,945827.059, Threads,16
+slurm-3473598.out:DATA,8408241.161, Threads,2
+slurm-3473599.out:DATA,3263864.967, Threads,4
+slurm-3473600.out:DATA,1879406.806, Threads,8
+slurm-3473601.out:DATA,1054153.155, Threads,16
+slurm-3473604.out:DATA,6867138.799, Threads,2
+slurm-3473606.out:DATA,3835199.518, Threads,4
+slurm-3473607.out:DATA,1951284.383, Threads,8
+slurm-3473608.out:DATA,1046650.964, Threads,16
