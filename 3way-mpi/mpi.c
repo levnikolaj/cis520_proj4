@@ -158,6 +158,8 @@ int main(int argc, char *argv[])
 
 	 gettimeofday(&t2, NULL);
 	 GetProcessMemory(&myMem);
+	 printf("Memory, Processes, %d, Rank, %d, vMem, %u KB, pMem, %u KB\n", numTasks, rank, myMem.virtualMem, myMem.physicalMem);
+	 fflush(stdout);
 	 free(longestCommonSubstring);
 	 MPI_Finalize();
 
@@ -166,7 +168,6 @@ int main(int argc, char *argv[])
 
 	 if(rank == 0)
 	 {
-	 	 printf("Memory, Processes, %d, vMem, %u KB, pMem, %u KB\n", numTasks, myMem.virtualMem, myMem.physicalMem);
  	 	 printf("DATA, %f, Processes, %d\n", elapsedTime, numTasks);
  	 }
 	 return 0;

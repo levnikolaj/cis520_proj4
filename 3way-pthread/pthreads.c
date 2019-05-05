@@ -153,7 +153,8 @@ void main(int argc, char *argv[])
 
 
 	// TODO: add memory and time output
-	for(i = 0; i < linesToProcess; i++) // i < NUM_WIKI_LINES - 1
+	/*
+	for(i = 0; i < linesToProcess - 1; i++) // i < NUM_WIKI_LINES - 1
 	{
 		printf("Lines%d-%d: ", i, i+1);
 		if(longestCommonSubstring[i] != NULL)
@@ -165,6 +166,7 @@ void main(int argc, char *argv[])
 			printf("None found\n");
 		}
 	}
+	*/
 
 	free(longestCommonSubstring);
 	free(wiki_dump);
@@ -179,7 +181,7 @@ void* algorithm(void* parameters)
 	algorithmArgs_t *args = (algorithmArgs_t *) parameters;
   int p, i, j, s1_len, s2_len, col, val, max = 0;
 	//printf("Thread:%u, s:%d, e:%d\n", self_id, args->startIndex, args->endIndex);
-	for(p = args->startIndex; p <= args->endIndex; p++) // endIndex is -1 before set
+	for(p = args->startIndex; p < args->endIndex; p++) // endIndex is -1 before set
 	{
 		max = 0;
 		// TODO: check pointer
